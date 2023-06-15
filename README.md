@@ -2,11 +2,11 @@
 minimalistic table generator written in C
 - no external dependecies (only standard library)
 - supports unicode characters
-- asan-tested
+- asan-tested for no memory leaks or overflows
 - lowest possible memory usage and code size
+- all functions documented in [sample main.c](main.c)
 
-## usage
-it's as simple as this:
+## example
 ```c
 #include "table.h"
 void* c0[] = {"Column1", "Column2",};
@@ -19,4 +19,11 @@ int main() {
     table_free(t);
 }
 ```
-all functions are documented in [sample main.c](main.c)
+prints this:
+```
++---------+---------+
+| Column1 | Column2 | 
++---------+---------+
+| Row1    | Row2    | 
++---------+---------+
+```
