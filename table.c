@@ -105,11 +105,12 @@ static inline void count_nl(size_t* c) {
 }
 
 static inline void count_content(table* t, char** con, size_t* c) {
-    (*c) += 3;
+    (*c) += 2;
     for(size_t i=0; i<t->column_count; ++i) {
+        ++(*c);
         (*c) += strlen(con[i]);
         for(size_t j=0; j<t->col_max_width[i]-strlen(con[i]); ++j) ++(*c);
-        (*c) += 3;
+        (*c) += 2;
     }
 }
 
@@ -150,6 +151,7 @@ static inline void str_new_headline(table* t, char* str) {
 
 static inline void str_content(table* t, char* str, char** con) {
     for(size_t i=0; i<t->column_count; ++i) {
+        strcat(str, " ");
         size_t uni_c = 0;
         for(size_t c=0; c<strlen(con[i])+1; ++c) {
             char tmp[1024];
@@ -159,12 +161,12 @@ static inline void str_content(table* t, char* str, char** con) {
         }
         uni_c -= (uni_c/2);
         for(size_t j=0; j<t->col_max_width[i]-(strlen(con[i])-uni_c); ++j) strcat(str, " ");
-        strcat(str, " | ");
+        strcat(str, " |");
     }
 }
 
 static inline void str_content_line(table* t, char* str, char** con) {
-    strcat(str, "\n| ");
+    strcat(str, "\n|");
     str_content(t, str, con);
 }
 
@@ -194,6 +196,7 @@ static inline void print_headline(table* t) {
 
 static inline void print_content(table* t, char** con) {
     for(size_t i=0; i<t->column_count; ++i) {
+        printf(" ");
         size_t uni_c = 0;
         for(size_t c=0; c<strlen(con[i])+1; ++c) {
             putchar(con[i][c]);
@@ -201,12 +204,12 @@ static inline void print_content(table* t, char** con) {
         }
         uni_c -= (uni_c/2);
         for(size_t j=0; j<t->col_max_width[i]-(strlen(con[i])-uni_c); ++j) printf(" ");
-        printf(" | ");
+        printf(" |");
     }
 }
 
 static inline void print_content_line(table* t, char** con) {
-    printf("\n| ");
+    printf("\n|");
     print_content(t, con);
 }
 
