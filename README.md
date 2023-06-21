@@ -1,7 +1,7 @@
 # ctable
 minimalistic table generator written in C
 - no external dependecies (only standard library)
-- supports unicode characters
+- supports unicode characters, ansi color codes
 - asan-tested for no memory leaks or overflows
 - lowest possible memory usage and code size
 - all functions documented in [sample main.c](main.c)

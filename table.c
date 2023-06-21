@@ -1,8 +1,28 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <regex.h>
+#include <stdint.h>
 
 #include "table.h"
+
+static inline int handle_regex(char* line) {
+    const char* reg = "(\033\[[0-9]{,4}m)";
+    regex_t regex;
+    regmatch_t pmatch[1];
+    regoff_t len;
+    intmax_t count = 0;
+    size_t offset = 0;
+    size_t linelen = strlen(line);
+    if(regcomp(&regex, reg, REG_EXTENDED)) return -1;
+    while(!regexec(&regex, line+offset, 1, pmatch, REG_EXTENDED)) {
+        offset += pmatch[0].rm_eo;
+        count += (intmax_t)(pmatch[0].rm_eo - pmatch[0].rm_so);
+        if(offset > linelen) break;
+    }
+    regfree(&regex);
+    return (int)count;
+}
 
 table* table_make(void** col, size_t col_c) {
     table* t = malloc(sizeof(table));
@@ -110,6 +130,9 @@ static inline void count_content(table* t, char** con, size_t* c) {
         ++(*c);
         (*c) += strlen(con[i]);
         for(size_t j=0; j<t->col_max_width[i]-strlen(con[i]); ++j) ++(*c);
+        int regex = 0;
+        if((intmax_t)(regex = handle_regex(con[i])) > 0)
+            for(size_t j=0; j<(intmax_t)regex; ++j) ++(*c);
         (*c) += 2;
     }
 }
@@ -161,6 +184,9 @@ static inline void str_content(table* t, char* str, char** con) {
         }
         uni_c -= (uni_c/2);
         for(size_t j=0; j<t->col_max_width[i]-(strlen(con[i])-uni_c); ++j) strcat(str, " ");
+        int regex = 0;
+        if((intmax_t)(regex = handle_regex(con[i])) > 0)
+            for(size_t j=0; j<(intmax_t)regex; ++j) strcat(str, " ");
         strcat(str, " |");
     }
 }
@@ -194,6 +220,7 @@ static inline void print_headline(table* t) {
     }
 }
 
+
 static inline void print_content(table* t, char** con) {
     for(size_t i=0; i<t->column_count; ++i) {
         printf(" ");
@@ -204,6 +231,9 @@ static inline void print_content(table* t, char** con) {
         }
         uni_c -= (uni_c/2);
         for(size_t j=0; j<t->col_max_width[i]-(strlen(con[i])-uni_c); ++j) printf(" ");
+        int regex = 0;
+        if((intmax_t)(regex = handle_regex(con[i])) > 0)
+            for(size_t j=0; j<(intmax_t)regex; ++j) printf(" ");
         printf(" |");
     }
 }

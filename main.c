@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "table.h"
+#include "color.h"
 
 void* c0[] = {
     "The first column that spawns long distance",
@@ -14,7 +15,7 @@ void* r0[] = {
     "Not enough rows will result in unexpected behavior",
 };
 void* r1[] = {
-    "Another row of dątą",
+    cc_bg_b_black cc_fg_green cc_bold "Another row of dątą" cc_clear,
     " ",
     "It works!",
 };
@@ -22,6 +23,7 @@ void* r1[] = {
 int main() {
     // Make table with void* array and it's size:
     table* t = table_make(c0, 2);
+    if(!t) exit(EXIT_FAILURE);
 
     // Realloc available columns:
     if(!table_add_col(t, c1, 1)) exit(EXIT_FAILURE);
