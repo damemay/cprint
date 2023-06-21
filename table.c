@@ -10,7 +10,6 @@ static inline int handle_regex(char* line) {
     const char* reg = "(\033\[[0-9]{,4}m)";
     regex_t regex;
     regmatch_t pmatch[1];
-    regoff_t len;
     intmax_t count = 0;
     size_t offset = 0;
     size_t linelen = strlen(line);
