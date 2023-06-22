@@ -1,9 +1,10 @@
+simple utilities for printing in C, written with lowest possible memory usage and code size in goal
+
 # ctable
-minimalistic table generator written in C
+minimalistic table generator
 - depends only on standard library and posix (regex)
 - supports unicode characters, ansi color codes
 - asan-tested for no memory leaks or overflows
-- lowest possible memory usage and code size
 - all functions documented in [samples](samples/table_colors.c)
 
 ## example
@@ -35,3 +36,7 @@ minimalistic progress spinner
 
 ## example
 available in [samples](samples/spinner.c)
+
+# ccolor
+ansi color codes macros
+- check [ccolor.h](ccolor.h)
