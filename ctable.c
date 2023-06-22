@@ -4,7 +4,7 @@
 #include <regex.h>
 #include <stdint.h>
 
-#include "table.h"
+#include "ctable.h"
 
 static inline int handle_regex(char* line) {
     const char* reg = "(\033\[[0-9]{,4}m)";
@@ -23,8 +23,8 @@ static inline int handle_regex(char* line) {
     return (int)count;
 }
 
-table* table_make(void** col, size_t col_c) {
-    table* t = malloc(sizeof(table));
+ctable* ctable_make(void** col, size_t col_c) {
+    ctable* t = malloc(sizeof(ctable));
     if(!t) return NULL;
 
     t->column_count = col_c;
@@ -52,7 +52,7 @@ table* table_make(void** col, size_t col_c) {
     return t;
 }
 
-int table_add_col(table* t, void** col, size_t col_c) {
+int ctable_add_col(ctable* t, void** col, size_t col_c) {
     char** prev = t->columns;
     size_t new_c = t->column_count + col_c;
     char** new = realloc(t->columns, new_c*sizeof(char*));
@@ -79,7 +79,7 @@ int table_add_col(table* t, void** col, size_t col_c) {
     return 1;
 }
 
-int table_add_row(table* t, void** row, size_t row_c) {
+int ctable_add_row(ctable* t, void** row, size_t row_c) {
     char*** prev = t->rows;
     size_t new_c = t->row_count + 1;
     char*** new = realloc(t->rows, sizeof(char**)*new_c);
@@ -111,7 +111,7 @@ int table_add_row(table* t, void** row, size_t row_c) {
     return 1;
 }
 
-static inline void count_headline(table* t, size_t* c) {
+static inline void count_headline(ctable* t, size_t* c) {
     ++(*c);
     for(size_t i=0; i<t->column_count; ++i) {
         for(size_t j=0; j<t->col_max_width[i]+2; ++j) ++(*c);
@@ -123,7 +123,7 @@ static inline void count_nl(size_t* c) {
     ++(*c);
 }
 
-static inline void count_content(table* t, char** con, size_t* c) {
+static inline void count_content(ctable* t, char** con, size_t* c) {
     (*c) += 2;
     for(size_t i=0; i<t->column_count; ++i) {
         ++(*c);
@@ -136,7 +136,7 @@ static inline void count_content(table* t, char** con, size_t* c) {
     }
 }
 
-static inline size_t count_size(table* t) {
+static inline size_t count_size(ctable* t) {
     size_t count = 0;
     count_headline(t, &count);
     count_content(t, t->columns, &count);
@@ -153,7 +153,7 @@ static inline size_t count_size(table* t) {
     return count;
 }
 
-static inline void str_headline(table* t, char* str) {
+static inline void str_headline(ctable* t, char* str) {
     for(size_t i=0; i<t->column_count; ++i) {
         for(size_t j=0; j<t->col_max_width[i]+2; ++j)
             strcat(str, "-");
@@ -161,17 +161,17 @@ static inline void str_headline(table* t, char* str) {
     }
 }
 
-static inline void str_start_headline(table* t, char* str) {
+static inline void str_start_headline(ctable* t, char* str) {
     sprintf(str, "+");
     str_headline(t, str);
 }
 
-static inline void str_new_headline(table* t, char* str) {
+static inline void str_new_headline(ctable* t, char* str) {
     strcat(str, "+");
     str_headline(t, str);
 }
 
-static inline void str_content(table* t, char* str, char** con) {
+static inline void str_content(ctable* t, char* str, char** con) {
     for(size_t i=0; i<t->column_count; ++i) {
         strcat(str, " ");
         size_t uni_c = 0;
@@ -190,12 +190,12 @@ static inline void str_content(table* t, char* str, char** con) {
     }
 }
 
-static inline void str_content_line(table* t, char* str, char** con) {
+static inline void str_content_line(ctable* t, char* str, char** con) {
     strcat(str, "\n|");
     str_content(t, str, con);
 }
 
-char* table_str(table* t, size_t* c) {
+char* ctable_str(ctable* t, size_t* c) {
     size_t count = count_size(t);
     char* str = malloc(sizeof(char)*count*2);
     if(!str) return NULL;
@@ -212,7 +212,7 @@ char* table_str(table* t, size_t* c) {
     return str;
 }
 
-static inline void print_headline(table* t) {
+static inline void print_headline(ctable* t) {
     printf("+"); for(size_t i=0; i<t->column_count; ++i) {
         for(size_t j=0; j<t->col_max_width[i]+2; ++j) printf("-");
         printf("+");
@@ -220,7 +220,7 @@ static inline void print_headline(table* t) {
 }
 
 
-static inline void print_content(table* t, char** con) {
+static inline void print_content(ctable* t, char** con) {
     for(size_t i=0; i<t->column_count; ++i) {
         printf(" ");
         size_t uni_c = 0;
@@ -237,12 +237,12 @@ static inline void print_content(table* t, char** con) {
     }
 }
 
-static inline void print_content_line(table* t, char** con) {
+static inline void print_content_line(ctable* t, char** con) {
     printf("\n|");
     print_content(t, con);
 }
 
-void table_print(table* t) {
+void ctable_print(ctable* t) {
     print_headline(t);
     print_content_line(t, t->columns);
     printf("\n");
@@ -254,7 +254,7 @@ void table_print(table* t) {
     printf("\n");
 }
 
-void table_free(table* t) {
+void ctable_free(ctable* t) {
     for(size_t i=0; i<t->column_count; ++i)
         if(t->columns[i]) free(t->columns[i]), t->columns[i] = NULL;
     if(t->columns) free(t->columns), t->columns = NULL;
