@@ -12,7 +12,6 @@ typedef struct cspin {
     bool busy;
     size_t cur;
     pthread_t thread;
-    pthread_mutex_t mutex;
     const char* msg;
 } cspin;
 
