@@ -1,6 +1,6 @@
 #include "cspin.h"
 
-inline static cspin* cspin_make() {
+static inline cspin* cspin_make() {
     cspin* t = malloc(sizeof(cspin));
     if(!t) return NULL;
 
@@ -18,7 +18,7 @@ inline static cspin* cspin_make() {
     
     return t;
 }
-inline static void _cspin_free(cspin** t) {
+static inline void _cspin_free(cspin** t) {
     #define t (*t)
     free(t->elements);
     free(t);
@@ -26,7 +26,7 @@ inline static void _cspin_free(cspin** t) {
     #undef t
 }
 
-inline static void* cspin_work(void* arg) {
+static inline void* cspin_work(void* arg) {
     cspin* t = (cspin*)arg;
     printf("%s ", t->msg);
     while(t->busy) {
