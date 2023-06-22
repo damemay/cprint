@@ -15,8 +15,7 @@ inline static cspin* cspin_make() {
     t->busy = true;
     t->cur = 0;
     t->msg = NULL;
-    pthread_mutex_init(&t->mutex, NULL);
-
+    
     return t;
 }
 inline static void _cspin_free(cspin** t) {
