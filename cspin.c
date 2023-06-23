@@ -57,10 +57,11 @@ void cspin_cancel(cspin** t) {
     #undef t
 }
 
-void cspin_restart(cspin** t, const char* msg) {
+int cspin_restart(cspin** t, const char* msg) {
     #define t (*t)
     if(msg) t->msg = msg;
-    pthread_create(&t->thread, NULL, cspin_work, t);
+    if(pthread_create(&t->thread, NULL, cspin_work, t)) return -1;
+    return 0;
     #undef t
 }
 

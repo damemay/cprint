@@ -1,6 +1,7 @@
 #include <stdio.h>
-#include "ctable.h"
-#include "ccolor.h"
+#include <stdlib.h>
+#include "../ctable.h"
+#include "../ccolor.h"
 
 void* c0[] = {
     "The first column that spawns long distance",
@@ -35,9 +36,11 @@ int main() {
     // Print the ctable to stdout:
     ctable_print(t);
 
-    // Save the ctable to char*. size is null-terminated character count:
-    size_t size;
-    char* str = ctable_str(t, &size);
+    // Save the ctable to char*.
+    // Second parameter is size_t* null-terminated character count.
+    // It can be null if we don't need to know the size:
+    char* str = ctable_str(t, NULL);
+    if(!str) exit(EXIT_FAILURE);
     printf("%s", str);
     // char* str is dynamically allocated inside ctable_str, so it needs to be freed:
     free(str);

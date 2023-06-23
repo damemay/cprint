@@ -17,5 +17,5 @@ typedef struct cspin {
 
 int cspin_start(cspin** t, const char* msg);
 void cspin_cancel(cspin** t);
-void cspin_restart(cspin** t, const char* msg);
+int cspin_restart(cspin** t, const char* msg);
 void cspin_free(cspin** t);

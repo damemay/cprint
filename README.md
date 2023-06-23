@@ -5,7 +5,7 @@ minimalistic table generator
 - depends only on standard library and posix (regex)
 - supports unicode characters, ansi color codes
 - asan-tested for no memory leaks or overflows
-- all functions documented in [samples](samples/table_colors.c)
+- all functions documented in [samples](samples/table.c)
 
 ## example
 ```c
@@ -23,9 +23,9 @@ int main() {
 prints:
 ```
 +---------+---------+
-| Column1 | Column2 | 
+| Column1 | Column2 |
 +---------+---------+
-| Row1    | Row2    | 
+| Row1    | Row2    |
 +---------+---------+
 ```
 
@@ -33,9 +33,19 @@ prints:
 minimalistic progress spinner
 - depends on posix (pthreads) and standard library
 - thread and memory/address sanitized
+- all functions documented in [samples](samples/spinner.c)
 
 ## example
-available in [samples](samples/spinner.c)
+```c
+#include "cspin.h"
+cspin* t;
+
+int main() {
+    cspin_start(&t, "Working...");
+    // Some actual code to do stuff
+    cspin_free(&t);
+}
+```
 
 # ccolor
 ansi color codes macros

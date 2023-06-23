@@ -208,7 +208,7 @@ char* ctable_str(ctable* t, size_t* c) {
     strcat(str, "\n");
     str_new_headline(t, str);
     strcat(str, "\n");
-    *c = count;
+    if(c) *c = count;
     return str;
 }
 
